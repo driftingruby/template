@@ -1,4 +1,15 @@
 <%%= form_with(model: <%= model_resource_name %>) do |form| %>
+  <%% if <%= singular_table_name %>.errors.any? %>
+    <div style="color: red">
+      <h2><%%= pluralize(<%= singular_table_name %>.errors.count, "error") %> prohibited this <%= singular_table_name %> from being saved:</h2>
+
+      <ul>
+        <%% <%= singular_table_name %>.errors.each do |error| %>
+          <li><%%= error.full_message %></li>
+        <%% end %>
+      </ul>
+    </div>
+  <%% end %>
 <% attributes.each do |attribute| -%>
   <div class="mb-3<%= attribute.type == :boolean ? ' form-check' : '' -%>">
 <% if attribute.password_digest? -%>
