@@ -17,6 +17,7 @@ I have a `~/.railsrc` file which contains the flag.
 
     # ~/.railsrc
     --skip-jbuilder
+    -a propshaft
     --javascript esbuild
     --css bootstrap
     -m ~/driftingruby/template.rb
