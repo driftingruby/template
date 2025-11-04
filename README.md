@@ -10,7 +10,7 @@ Download the template to a directory. Personally, I keep mine under
 
 You can then create a new Rails application with this template.
 
-    rails new example -m ~/<TEMPLATE_LOCATION>/template.rb
+    rails new example -m ~/<TEMPLATE_LOCATION>/tailwind.rb
 
 *NOTE:* When I'm creating a new application, I omit the `-m` flag since
 I have a `~/.railsrc` file which contains the flag.
