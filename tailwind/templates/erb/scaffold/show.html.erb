@@ -1,0 +1,9 @@
+<%%= render @<%= singular_table_name %> %>
+
+<div>
+  <%%= link_to "Edit", edit_<%= singular_table_name %>_path(@<%= singular_table_name %>) %> |
+  <%%= link_to "Destroy", <%= singular_table_name %>_path(@<%= singular_table_name %>),
+    "data-turbo-method": :delete,
+    "data-turbo-confirm": "Are you sure?" %> |
+  <%%= link_to "Back to <%= human_name.pluralize.downcase %>", <%= index_helper %>_path %>
+</div>

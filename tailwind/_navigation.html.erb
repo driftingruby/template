@@ -1,0 +1,17 @@
+<nav class="bg-white py-4">
+  <div class="container max-w-7xl sm:px-6 lg:px-8 flex items-center justify-between">
+    <a href="#" class="lg:flex justify-start">
+      <%%= image_tag 'logo.png', class: 'h-8' %>
+    </a>
+    <div class="lg:flex flex-grow justify-start ms-8" id="nav">
+      <ul class="flex space-x-6">
+        <%%= render 'layouts/navigation_links' %>
+      </ul>
+    </div>
+    <div class="lg:hidden absolute top-16 left-0 w-full bg-white hidden" id="mobile-menu">
+      <ul class="flex flex-col items-center space-y-4 py-4">
+        <%%= render 'layouts/navigation_links' %>
+      </ul>
+    </div>
+  </div>
+</nav>

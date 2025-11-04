@@ -1,0 +1,30 @@
+
+<section>
+  <div class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        <h2>Log in</h2>
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { "data-turbo": false }) do |f| %>
+          <div class="field">
+            <%= f.label :email, class: "sr-only" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control my-3 bg-light" %>
+          </div>
+          <div class="field">
+            <%= f.label :password, class: "sr-only" %>
+            <%= f.password_field :password, autocomplete: "current-password", class: "form-control my-3 bg-light" %>
+          </div>
+          <% if devise_mapping.rememberable? %>
+            <div class="form-check form-group mt-2">
+              <%= f.check_box :remember_me, class: "form-check-input" %>
+              <%= f.label :remember_me, class: "form-check-label text-muted" %>
+            </div>
+          <% end %>
+          <div class="actions">
+            <%= f.submit "Log in", class: "btn btn-primary" %>
+          </div>
+          <%= render "devise/shared/links" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

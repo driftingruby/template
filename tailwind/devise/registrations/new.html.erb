@@ -1,0 +1,35 @@
+<section>
+  <div class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        <h2>Sign Up</h2>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { "data-turbo": false }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <div class="field">
+            <%= f.label :email, class: "sr-only" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control my-3 bg-light" %>
+          </div>
+
+          <div class="field">
+            <%= f.label :password, class: "sr-only" %>
+            <% if @minimum_password_length %>
+            <em>(<%= @minimum_password_length %> characters minimum)</em>
+            <% end %>
+            <%= f.password_field :password, autocomplete: "current-password", class: "form-control my-3 bg-light" %>
+          </div>
+
+          <div class="field">
+            <%= f.label :password_confirmation, class: "sr-only" %>
+            <%= f.password_field :password_confirmation, autocomplete: "current-password", class: "form-control my-3 bg-light" %>
+          </div>
+
+          <div class="actions">
+            <%= f.submit "Sign Up", class: "btn btn-primary" %>
+          </div>
+          <%= render "devise/shared/links" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
