@@ -1,42 +1,38 @@
 # frozen_string_literal: true
-run 'bundle remove tzinfo-data'
-run 'bundle install'
 
-remove_file 'public/favicon.ico'
-remove_file 'public/icon.png'
-remove_file 'public/icon.svg'
-copy_file '~/driftingruby/tailwind/favicon.ico', 'public/favicon.ico'
-copy_file '~/driftingruby/tailwind/icon.png', 'public/icon.png'
-copy_file '~/driftingruby/tailwind/logo.svg', 'public/icon.svg'
-copy_file '~/driftingruby/tailwind/logo.png', 'app/assets/images/logo.png'
+# Resolve copy_file sources relative to this file so the template works from
+# wherever it's cloned, not just ~/driftingruby.
+source_paths.unshift(__dir__)
 
-generate(:controller, 'welcome', 'index')
+# gsub_file! raises when nothing matches, so a change to the Rails defaults
+# fails loudly instead of silently producing an unbranded app.
+gsub_file! 'Gemfile', /^# Windows does not include zoneinfo files.*\ngem "tzinfo-data".*\n\n/, ''
 
-gsub_file 'app/views/layouts/application.html.erb', '<html>', '<html class="h-full bg-gray-200">'
-gsub_file 'app/views/layouts/application.html.erb', '<body>', '<body class="m-4 md:m-8 lg:m-8">'
-gsub_file 'app/views/layouts/application.html.erb', '<title>Template</title>', '<title>Drifting Ruby</title>'
-gsub_file 'app/views/layouts/application.html.erb', '<%= yield %>' do
-  <<~RUBY
-    <div class="min-h-full p-4 bg-white border-2 border-slate-400 shadow-lg">
-          <%= render 'layouts/navigation' %>
-          <% flash.each do |type, msg| %>
-            <% if type == 'alert' %>
-              <%= content_tag :div, msg, class: "bg-red-500 text-white p-4 rounded mb-4", role: :alert %>
-            <% else %>
-              <%= content_tag :div, msg, class: "bg-blue-500 text-white p-4 rounded mb-4", role: :alert %>
-            <% end %>
-          <% end %>
-          <div class="py-4">
-            <div class="max-w-7xl sm:px-6 lg:px-8">
-              <%= yield %>
-            </div>
-          </div>
+copy_file 'tailwind/favicon.ico', 'public/favicon.ico', force: true
+copy_file 'tailwind/icon.png', 'public/icon.png', force: true
+copy_file 'tailwind/logo.svg', 'public/icon.svg', force: true
+copy_file 'tailwind/logo.png', 'app/assets/images/logo.png'
+
+layout = 'app/views/layouts/application.html.erb'
+gsub_file! layout, '<html>', '<html class="bg-gray-200">'
+gsub_file! layout, %r{<title>.*</title>}, '<title><%= content_for(:title) || "Drifting Ruby" %></title>'
+# Flash is left to the views: the tailwindcss-rails scaffold and authentication
+# generators already render notice/alert, so a layout flash would show twice.
+gsub_file! layout, %r{<body>.*</body>}m do
+  <<~ERB.strip
+    <body class="min-h-screen flex flex-col p-4 md:p-8">
+        <div class="flex-1 p-4 bg-white border-2 border-slate-400 shadow-lg sm:px-10 lg:px-12">
+          <%= render "layouts/navigation" %>
+          <main class="py-4">
+            <%= yield %>
+          </main>
         </div>
-  RUBY
+      </body>
+  ERB
 end
 
-template '~/driftingruby/tailwind/_navigation.html.erb', 'app/views/layouts/_navigation.html.erb'
-template '~/driftingruby/tailwind/_navigation_links.html.erb', 'app/views/layouts/_navigation_links.html.erb'
+copy_file 'tailwind/_navigation.html.erb', 'app/views/layouts/_navigation.html.erb'
+copy_file 'tailwind/_navigation_links.html.erb', 'app/views/layouts/_navigation_links.html.erb'
 
 inject_into_file 'config/application.rb', before: '  end' do
   <<-CODE
@@ -49,12 +45,13 @@ inject_into_file 'config/application.rb', before: '  end' do
   CODE
 end
 
-gem "hotwire-spark", group: :development
+gem 'hotwire-spark', group: :development
 
-route "root to: 'welcome#index'"
+route 'root "welcome#index"'
 
 after_bundle do
-  git :init
+  generate :controller, 'welcome', 'index', '--skip-routes'
+
   git add: '.'
   git commit: %( -m 'base')
 end
